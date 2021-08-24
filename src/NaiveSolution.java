@@ -95,55 +95,12 @@ public class NaiveSolution {
         colorPallet.add("\u001B[35m");
 
 
-        // convertToStringToHashMap("* {Ee=[FfEe, HhEe], Gg=[cgCG, fgFG], Cc=[cgCG,
-        // BCbc], Aa=[daDA, AaBb], FG=[FEGH, fgFG], BC=[CBDA, BFCG], bc=[adbc, fgbc],
-        // fg=[gfhe, fgbc], bf=[bfae, bfBF], BF=[bfBF, AEBF], DH=[dhDH, AEDH], dh=[dhDH,
-        // cdgh], Ff=[FfEe, bfBF], Hh=[HhEe, dhDH], Bb=[bfBF, BCbc], Dd=[dhDH, daDA],
-        // GH=[FEGH, ghGH], EF=[FEGH, FfEe], ef=[FfEe, bfae], CD=[CBDA, CDGH], AB=[CBDA,
-        // AEBF], ab=[bfae, adbc], cd=[adbc, cdgh], gh=[cdgh, gfhe], ae=[bfae, dahe],
-        // CG=[cgCG, BFCG], cg=[cgCG, cdgh], AE=[AEBF, AaEe], HE=[], he=[], DA=[CBDA,
-        // daDA], da=[]}\n");
-
-//        HashMap<String,List<String>> sol=  findValidUnfoldings( faceToEdges);
-//
-//        if(sol.size() == 0 && validUnfoldings.size()==0) System.out.println("NO SOLUTION FOUND");
-//        else{int count=1;
-//            for(String s: sol.keySet()) {
-//                System.out.println(count++ +"Edge " + s + " connects the faces: ");
-//            for(String str: sol.get(s)) System.out.println(str);
-//            }
-//            System.out.println(validUnfoldings.size());
-//        }
-
-        /*
-         *
-         * {Ee=[FfEe, HhEe], Gg=[cgCG, fgFG], Cc=[cgCG, BCbc], Aa=[daDA, AaBb],
-         * FG=[FEGH, fgFG], BC=[CBDA, BFCG], bc=[adbc, fgbc], fg=[gfhe, fgbc], bf=[bfae,
-         * bfBF], BF=[bfBF, AEBF], DH=[dhDH, AEDH], dh=[dhDH, cdgh], Ff=[FfEe, bfBF],
-         * Hh=[HhEe, dhDH], Bb=[bfBF, BCbc], Dd=[dhDH, daDA], GH=[FEGH, ghGH], EF=[FEGH,
-         * FfEe], ef=[FfEe, bfae], CD=[CBDA, CDGH], AB=[CBDA, AEBF], ab=[bfae, adbc],
-         * cd=[adbc, cdgh], gh=[cdgh, gfhe], ae=[bfae, dahe], CG=[cgCG, BFCG], cg=[cgCG,
-         * cdgh], AE=[AEBF, AaEe], HE=[], he=[], DA=[CBDA, daDA], da=[]}
-         *
-         */
-
     }
 
     /* Function number 1 */
     public static HashMap<String, List<String>> findValidUnfoldings(
             HashMap<String, List<String>> faceToEdges, HashMap<String, List<String>> edgeToFacesSolution) {
-        /*
-         * 1. found possible unfolding. 2. now we need to try and place it on the grid.
-         * 3. when placing: 3.1: start with a random face and explore sides if you are
-         * there in the edgeToFaceSolutions. 3.2: recursively keep moving. condition: we
-         * recurse on the side when we are connected to the other face. To Stop this
-         * recursion: if we come to a face again then we return false. and we by default
-         * return true and if there is a problem in the traversal then we return false.
-         *
-         * 4. the first step then is to take any face and start exploring it if it is
-         * connected to something.
-         *
-         */
+
 
 //                 for(String s: ans){
 //                    s = s.substring(1, s.length() - 2);
@@ -163,8 +120,7 @@ public class NaiveSolution {
         if (startEdge == "")
             return new HashMap<>();
 
-        // SUBSTITUE if condition: validationCheckOld(edgeToFacesSolution, startEdge,
-        // visited, faceToEdges)
+
         if (validationCheck(edgeToFacesSolution, startEdge, faceToEdges)) {
             int num = 1;
             for (int i = 0; i < 60; i++) {
@@ -217,10 +173,7 @@ public class NaiveSolution {
 
             }
         }
-        for (String s : currDirections.keySet()) {
-            // System.out.println("central Face : "+s+":"+ " direction edge is:"+
-            // currDirections.get(s));
-        }
+
         // preping the grid to open on.
         for (int i = 0; i < 60; i++) {
             for (int j = 0; j < 60; j++) {
@@ -241,10 +194,7 @@ public class NaiveSolution {
         dir.put("WEST", Arrays.asList(-1, 0));
 
         for (String direction : currDirections.keySet()) {
-            // create a grid and visited global array
-            // if the central face is not connected to the other face via the edge
-            // currDirections.get(direction) ten we dont explore it.
-            if (!edgeToFacesSolution.get(currDirections.get(direction)).contains(centralFace))
+             if (!edgeToFacesSolution.get(currDirections.get(direction)).contains(centralFace))
                 continue;
             // finding the neighbouring face.
             String neighbouringFace = edgeToFacesSolution.get(currDirections.get(direction)).get(0) == centralFace
@@ -289,14 +239,10 @@ public class NaiveSolution {
 
         if (visited.get(currFace) == true) {
 
-            System.out.println(
-                    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH visited twice");
-            return false;
+             return false;
         }
 
         if (grid[yourX][yourY].length() == 4) {
-            System.out.println(
-                    "yooyoyyoyoyoooyoyoyoooyoyoyoyooyoyoyoyoooyoyoyoyoyoyoyoyoyoyoyoyoyo FAILED TO PLACE YOURX AND YOURY ARE FILLED");
             return false;
         }
 
@@ -317,7 +263,7 @@ public class NaiveSolution {
         if (myDirections.size() == 0) {
             return false;
         }
-        for (String s : myDirections.keySet()) {// NEWS
+        for (String s : myDirections.keySet()) {
 
             if (parentSharingEdge == myDirections.get(s))
                 continue;// don't go towards parent's direction.
