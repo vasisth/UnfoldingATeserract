@@ -315,7 +315,6 @@ public class NaiveSolution {
         HashMap<String, String> myDirections = provideMyDirections(currFace, faceToEdges, parentDefinedDirections,
                 parentAssignedDirection, parentSharingEdge);
         if (myDirections.size() == 0) {
-            System.out.println("WTFWTFWTFWTFWTFWTFWTFWTFWTFWTFWTF my direction is going zero size figure.");
             return false;
         }
         for (String s : myDirections.keySet()) {// NEWS
