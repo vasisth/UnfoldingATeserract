@@ -429,22 +429,7 @@ public class NaiveSolution {
         return answer;
     }
 
-//old version code: it performs bfs on the edges and checks for a tree structure.
-    /*
-     * public static boolean validationCheckOld(HashMap<String,List<String>>
-     * edgeToFacesSolution, String startEdge, HashMap<String, Boolean> visited,
-     * HashMap<String, List<String>> faceToEdges){
-     *
-     * Queue<String> edges = new LinkedList<>(); edges.add(startEdge);
-     * while(!edges.isEmpty()){ String currEdge = edges.remove();
-     *
-     * for(String face: edgeToFacesSolution.get(currEdge)){
-     * if(visited.get(face)==false) { visited.put(face, true); for (String edge :
-     * faceToEdges.get(face)) { if (edge != currEdge) { if
-     * (edgeToFacesSolution.get(edge).contains(face)) edges.add(edge); } } } } }
-     * for(String s: visited.keySet()) {if(visited.get(s)==false) return false;}
-     * return true; }
-     */
+
 
     /* Function number 5 */
     public static HashMap<String, List<String>> convertToStringToHashMap(String text) {
