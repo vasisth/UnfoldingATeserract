@@ -22,6 +22,7 @@ public class UnfoldingATeserract {
 		private static HashMap<String, HashMap<String, String>> faceAndNeighbours = new HashMap<>();
 		private static HashMap<String, String> directionArrows = new HashMap<>();
 		private static HashMap<String, Integer> allTreeEncodings = new HashMap<>();
+		private static HashMap<String, Integer> degree = new HashMap<>();
 		private static Set<String> allEncodings = new HashSet<String>();
 
 
@@ -177,6 +178,7 @@ public class UnfoldingATeserract {
 				currDirections.put("SOUTH", edge);
 			} else {
 				// adding the east or west edge
+				
 				if (flipSides) {
 					currDirections.put("EAST", edge);
 					flipSides = false;
@@ -281,10 +283,11 @@ public class UnfoldingATeserract {
 		tree.get(nodeIndex.get(centralFace)).add(nodeIndex.get(otherFace));
 		tree.get(nodeIndex.get(otherFace)).add(nodeIndex.get(centralFace));
 
+		Map<String, String>  leafAndItsParent = new HashMap<>();
+		leafAndItsParent.put(leafFace, otherFace);
 
-
-
-		BFS(theQueueParent, theQueueChildren, faceToEdges, abstractCube, tree, nodeIndex, otherFace);
+		String s=BFS(theQueueParent, theQueueChildren, faceToEdges, abstractCube, tree, nodeIndex, otherFace, leafAndItsParent);
+		System.out.println(s+" output     "+depth);
 		//tree operation post traversal.
 		tree.get(nodeIndex.get(centralFace)).remove(nodeIndex.get(otherFace));
 		tree.get(nodeIndex.get(otherFace)).remove(nodeIndex.get(centralFace));
@@ -298,18 +301,61 @@ public class UnfoldingATeserract {
 	private static int depth=0;
 	static int numberofUniqueSol= 1;
 	public static int index=1;
-	public static void BFS(Stack<String> theQueueParent, Stack<String> theQueueChildren, HashMap<String, List<String>> faceToEdges,
-						   AbstractCube abstractCube, List<List<Integer>> tree, HashMap<String, Integer> nodeIndex, String otherFace) {
+	public static String BFS(Stack<String> theQueueParent, Stack<String> theQueueChildren, HashMap<String, List<String>> faceToEdges,
+						   AbstractCube abstractCube, List<List<Integer>> tree, HashMap<String, Integer> nodeIndex, String otherFace, Map<String, String>leafAndItsParent) {
 		//System.out.println("REACHED BFS");
-		if (theQueueParent.size() == 0) {
 
-			for (String face : visited.keySet()) {
-				if (!visited.get(face)) {
-					//System.out.println("NNNNNNOOOOOOOOOOOOOOOOOOOONNNNNNNNOOOOOOOOOO did not visit all faces");
-					return;
+		for (int col = 0; col < 60; col++) {
+			for (int row = 0; row < 60; row++) {
+				if (col == 30 && row == 30) {
+					System.out.print("F");
+					continue;
+				}
+				if (col == 0) {
+					if (row % 10 == 0) {
+
+						System.out.print(row / 10);
+					} else System.out.print(grid[col][row]);
+				} else {
+					System.out.print(grid[col][row]);
 				}
 			}
+			System.out.println();
+			System.out.print(col + 1);
+		}
 
+
+
+
+		if (theQueueParent.size() == 0) {
+
+			for (int col = 0; col < 60; col++) {
+				for (int row = 0; row < 60; row++) {
+					if (col == 30 && row == 30) {
+						System.out.print("F");
+						continue;
+					}
+					if (col == 0) {
+						if (row % 10 == 0) {
+
+							System.out.print(row / 10);
+						} else System.out.print(grid[col][row]);
+					} else {
+						System.out.print(grid[col][row]);
+					}
+				}
+				System.out.println();
+				System.out.print(col + 1);
+			}
+			for (String face : visited.keySet()) {
+				System.out.println("BREAKING HERE YOO HOO");
+				if (!visited.get(face)) {
+					//System.out.println("NNNNNNOOOOOOOOOOOOOOOOOOOONNNNNNNNOOOOOOOOOO did not visit all faces");
+					return "AllOk";
+				}
+			}
+			System.out.println(leafAndItsParent.toString());
+			System.out.println(degree.toString());
 		//	System.out.println(numberofsol++ +"YEEEEEEEEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHH...... REACHED THE END.");
 			//grid[35][28]=="FGfg> "
 			//grid[32][35].equals("fgFG") && !grid[32][36].equals("-");//
@@ -318,39 +364,47 @@ public class UnfoldingATeserract {
 			//grid[32][34].equals("fgbcv ") && grid[32][35].equals("fgFG> ") && grid[33][35].equals("ghGHv ") && grid[35][37].equals("AaEev ") && grid[32][37].equals("cgCG^ ") && grid[30][34].equals("dahe^ ")
 			//grid[30][28].equals("-")||grid[29][29].equals("-")||grid[31][29].equals("-")
 
+			for(String s: leafAndItsParent.keySet()){
+
+				if(degree.get(leafAndItsParent.get(s))>1) return leafAndItsParent.get(s);
+
+			}
+
 				CheckForUniqueShape(tree, nodeIndex);
 
-//				System.out.println();
-//
-//				for (int col = 0; col < 60; col++) {
-//					for (int row = 0; row < 60; row++) {
-//						if (col == 30 && row == 30) {
-//							System.out.print("F");
-//							continue;
-//						}
-//						if (col == 0) {
-//							if (row % 10 == 0) {
-//
-//								System.out.print(row / 10);
-//							} else System.out.print(grid[col][row]);
-//						} else {
-//							System.out.print(grid[col][row]);
-//						}
-//					}
-//					System.out.println();
-//					System.out.print(col + 1);
-//				}
-//
-//				System.out.println("BREAKING HERE YOO HOO");
-//				System.exit(0);
+			//if(allEncodings.size()==99){
+				System.out.println();
+
+				for (int col = 0; col < 60; col++) {
+					for (int row = 0; row < 60; row++) {
+						if (col == 30 && row == 30) {
+							System.out.print("F");
+							continue;
+						}
+						if (col == 0) {
+							if (row % 10 == 0) {
+
+								System.out.print(row / 10);
+							} else System.out.print(grid[col][row]);
+						} else {
+							System.out.print(grid[col][row]);
+						}
+					}
+					System.out.println();
+					System.out.print(col + 1);
+				}
+
+				System.exit(0);
+				return "AllOk";
+			}
 
 
-			return;
-		}
+		//}
 
 
 
         String self = theQueueParent.pop();// this is the face we are dealing with rn.
+		degree.put(self, 0);
 
         boolean spotFilledByI = false, spotFilledByJ = false, spotFilledByZ = false;
         String parentDirection =""; //north west east south
@@ -360,6 +414,7 @@ public class UnfoldingATeserract {
         String parentSharingEdge = abstractCube.getParentSharingEdge(self);// store key value as key being the child and
         // the value the edge that the child and
         // parent share.
+		String parent = AbstractCube.getEdgeToParent().get(parentSharingEdge);
         List<Integer> myCoordinates = abstractCube.getCoordinatesOfTheFaces(self);// [x,y] coordinates
         HashMap<String, List<Integer>> dir = abstractCube.getUnitVectors();// this returns a hash table of NORTH ->
         List<String> edgesExploredByTheCurrFace = new ArrayList<>();
@@ -388,6 +443,7 @@ public class UnfoldingATeserract {
 		}
 
 		// creating combinations of
+		int myDegree=1;
 		int countI = 0;
 		for (int i = 2; i >= 0; i--) {
 			String face1 = "";
@@ -429,11 +485,13 @@ public class UnfoldingATeserract {
 				//remove this as you need to update this at the end of each loop.
 				AbstractCube.addFaceToParentSharingEdge(face1, selfDirections.get(availableDirections.get(0)));
 				AbstractCube.addToCoordinatesOfTheFaces(face1,
-						Arrays.asList(myCoordinates.get(0) + dir.get(availableDirections.get(0)).get(0),
+						asList(myCoordinates.get(0) + dir.get(availableDirections.get(0)).get(0),
 								myCoordinates.get(1) + dir.get(availableDirections.get(0)).get(1)));
 
 				visited.put(face1, true);
+
 				visitedEdges.put(selfDirections.get(availableDirections.get(0)), true);
+				degree.put(self, degree.get(self)+1);
 				//System.out.println("Parent " + self + " submitted this face at i level to the queue " + face1);
 				theQueueChildren.add(face1);
 				grid[myCoordinates.get(0) + dir.get(availableDirections.get(0)).get(0)][myCoordinates.get(1)
@@ -481,17 +539,18 @@ public class UnfoldingATeserract {
 
 					visited.put(face2, true);
 					visitedEdges.put(selfDirections.get(availableDirections.get(1)), true);
+					degree.put(self, degree.get(self)+1);
 					theQueueChildren.add(face2);
 					//System.out.println("Parent " + self + " submitted this face at j level to the queue " + face2);
 					// there are some operations thw parent has to do before putting the face in
 					// theQueue.
 					AbstractCube.addFaceToParentSharingEdge(face2, selfDirections.get(availableDirections.get(1)));
 					AbstractCube.addToCoordinatesOfTheFaces(face2,
-							Arrays.asList(myCoordinates.get(0) + dir.get(availableDirections.get(1)).get(0),
+							asList(myCoordinates.get(0) + dir.get(availableDirections.get(1)).get(0),
 									myCoordinates.get(1) + dir.get(availableDirections.get(1)).get(1)));
 
 					grid[myCoordinates.get(0) + dir.get(availableDirections.get(1)).get(0)][myCoordinates.get(1)
-							+ dir.get(availableDirections.get(1)).get(1)] = depth+face2+directionArrows.get(availableDirections.get(1))+" ";
+							+ dir.get(availableDirections.get(1)).get(1)] = depth+ face2+directionArrows.get(availableDirections.get(1))+" ";
 					//tree operations.
 
 					tree.get(nodeIndex.get(self)).add(nodeIndex.get(face2));
@@ -540,18 +599,18 @@ public class UnfoldingATeserract {
 						AbstractCube.addEdgeToParent(selfDirections.get(availableDirections.get(2)), self);
 						visited.put(face3, true);
 						visitedEdges.put(selfDirections.get(availableDirections.get(2)), true);
+						degree.put(self, degree.get(self)+1);
 						theQueueChildren.add(face3);
 						//System.out.println("Parent " + self + " submitted this face at z level to the queue " + face3);
 								AbstractCube.addFaceToParentSharingEdge(face3, selfDirections.get(availableDirections.get(2)));
 						AbstractCube.addToCoordinatesOfTheFaces(face3,
-								Arrays.asList(myCoordinates.get(0) + dir.get(availableDirections.get(2)).get(0),
+								asList(myCoordinates.get(0) + dir.get(availableDirections.get(2)).get(0),
 										myCoordinates.get(1) + dir.get(availableDirections.get(2)).get(1)));
 
 						grid[myCoordinates.get(0) + dir.get(availableDirections.get(2)).get(0)][myCoordinates.get(1)
-								+ dir.get(availableDirections.get(2)).get(1)] =depth+face3+directionArrows.get(availableDirections.get(2))+" ";;
+								+ dir.get(availableDirections.get(2)).get(1)] =depth+ face3+directionArrows.get(availableDirections.get(2))+" ";;
 
 						//tree operations.
-
 						tree.get(nodeIndex.get(self)).add(nodeIndex.get(face3));
 						tree.get(nodeIndex.get(face3)).add(nodeIndex.get(self));
 						faceAndNeighbours.get(self).put(availableDirections.get(2), face3);
@@ -562,15 +621,74 @@ public class UnfoldingATeserract {
 						spotFilledByZ = true;
 					}
 
-						if(self==otherFace && ( z==0 || j==0||z==0)){
+						if(self==otherFace && ( j !=0 || z!=0)){
+							//for z:
+							if(z!=0){
+								visited.put(face3, false);
+								grid[myCoordinates.get(0) + dir.get(availableDirections.get(2)).get(0)][myCoordinates.get(1)
+										+ dir.get(availableDirections.get(2)).get(1)] = "-";
+								visitedEdges.put(selfDirections.get(availableDirections.get(2)), false);
+								degree.put(self, degree.get(self) - 1);
+								AbstractCube.removeEdgeToParent(selfDirections.get(availableDirections.get(2)));
+								AbstractCube.removeFaceToParentSharingEdge(face3);
+								AbstractCube.removeCoordinatesOfTheFaces(face3);
+								theQueueChildren.remove(face3);
 
+								//tree operation post traversal.
+								tree.get(nodeIndex.get(self)).remove(nodeIndex.get(face3));
+								tree.get(nodeIndex.get(face3)).remove(nodeIndex.get(self));
+								faceAndNeighbours.get(self).remove(availableDirections.get(2), face3);
+								faceAndNeighbours.get(face3).remove(oppositeDirection(availableDirections.get(2)), self);
+							}
+							//for j.
+							if(j!=0){
+								visited.put(face2, false);
+								grid[myCoordinates.get(0) + dir.get(availableDirections.get(1)).get(0)][myCoordinates.get(1)
+										+ dir.get(availableDirections.get(1)).get(1)] = "-";
+								visitedEdges.put(selfDirections.get(availableDirections.get(1)), false);
+								degree.put(self, degree.get(self) - 1);
+								AbstractCube.removeEdgeToParent(selfDirections.get(availableDirections.get(1)));
+								AbstractCube.removeFaceToParentSharingEdge(face2);
+								AbstractCube.removeCoordinatesOfTheFaces(face2);
+								theQueueChildren.remove(face2);
+								//tree operations
+
+								tree.get(nodeIndex.get(self)).remove(nodeIndex.get(face2));
+								tree.get(nodeIndex.get(face2)).remove(nodeIndex.get(self));
+								faceAndNeighbours.get(self).remove(availableDirections.get(1), face2);
+								faceAndNeighbours.get(face2).remove(oppositeDirection(availableDirections.get(1)), self);
+							}
+
+							continue;
 						}
-						else {
+
+						else {if(!spotFilledByI && !spotFilledByJ && !spotFilledByZ){
+
+							if(degree.get(parent)>1)return parent;
+						}
+
 							depth++;
 							if (theQueueParent.size() != 0) {
-								BFS(theQueueParent, theQueueChildren, faceToEdges, abstractCube, tree, nodeIndex, otherFace);
-							} else {
-								BFS(theQueueChildren, theQueueParent, faceToEdges, abstractCube, tree, nodeIndex, otherFace);
+								String s = BFS(theQueueParent, theQueueChildren, faceToEdges, abstractCube, tree, nodeIndex, otherFace, leafAndItsParent);
+								if(leafAndItsParent.containsKey(self))leafAndItsParent.remove(self, parent);
+								if(s!="AllOk"){
+									if(s==self){
+										continue;
+									}
+									else return s;
+								}
+								else return s;
+							}
+							else {
+								String s = BFS(theQueueChildren, theQueueParent, faceToEdges, abstractCube, tree, nodeIndex, otherFace, leafAndItsParent);
+								if(leafAndItsParent.containsKey(self))leafAndItsParent.remove(self, parent);
+								if(s!="AllOk"){
+									if(s==self){
+										continue;
+									}
+								}
+								else return s;
+
 							}
 							depth--;
 
@@ -581,6 +699,7 @@ public class UnfoldingATeserract {
 						grid[myCoordinates.get(0) + dir.get(availableDirections.get(2)).get(0)][myCoordinates.get(1)
 								+ dir.get(availableDirections.get(2)).get(1)] = "-";
 						visitedEdges.put(selfDirections.get(availableDirections.get(2)), false);
+						degree.put(self, degree.get(self)-1);
 						AbstractCube.removeEdgeToParent(selfDirections.get(availableDirections.get(2)));
 						AbstractCube.removeFaceToParentSharingEdge(face3);
 						AbstractCube.removeCoordinatesOfTheFaces(face3);
@@ -603,6 +722,7 @@ public class UnfoldingATeserract {
 					grid[myCoordinates.get(0) + dir.get(availableDirections.get(1)).get(0)][myCoordinates.get(1)
 							+ dir.get(availableDirections.get(1)).get(1)] = "-";
 					visitedEdges.put(selfDirections.get(availableDirections.get(1)), false);
+					degree.put(self, degree.get(self)-1);
 					AbstractCube.removeEdgeToParent(selfDirections.get(availableDirections.get(1)));
 					AbstractCube.removeFaceToParentSharingEdge(face2);
 					AbstractCube.removeCoordinatesOfTheFaces(face2);
@@ -623,6 +743,7 @@ public class UnfoldingATeserract {
 				grid[myCoordinates.get(0) + dir.get(availableDirections.get(0)).get(0)][myCoordinates.get(1)
 						+ dir.get(availableDirections.get(0)).get(1)] = "-";
 				visitedEdges.put(selfDirections.get(availableDirections.get(0)), false);
+				degree.put(self, degree.get(self)-1);
 				AbstractCube.removeEdgeToParent(selfDirections.get(availableDirections.get(0)));
 				AbstractCube.removeFaceToParentSharingEdge(face1);
 				AbstractCube.removeCoordinatesOfTheFaces(face1);
@@ -643,11 +764,11 @@ public class UnfoldingATeserract {
 
 		}
 		AbstractCube.removeFaceAndItsDirections(self);
+		degree.remove(self, 0);
 
 
-
-	//	System.out.println(self+"  THEEEEEEEEEEEEEEEEEEEEEEE EEEEEEEEEEEEEEEEEEEEEEEENNNNNNNNNNNNNNNNNNNNNNNNNNNDDDDDDDDDDDDDDDDDDDD");
-
+		//System.out.println(self+"  THEEEEEEEEEEEEEEEEEEEEEEE EEEEEEEEEEEEEEEEEEEEEEEENNNNNNNNNNNNNNNNNNNNNNNNNNNDDDDDDDDDDDDDDDDDDDD");
+	return "AllOk";
 	}
 
 
@@ -670,7 +791,7 @@ public class UnfoldingATeserract {
 //			System.out.println("ALL ENCODINGS SIZE IS GREATER THAN 261");
 //			System.exit(0);
 //		}
-		System.out.println("ALL ENCODINGS SIZE :"+allEncodings.size());
+		//System.out.println("ALL ENCODINGS SIZE :"+allEncodings.size());
 //		if(ans){
 //			//System.out.println("ANOTHER ISOMORPHIC AND THE NUMBER OF UNIQUE UNFOLDINGS ARE: "+ numberofUniqueSol);
 //
